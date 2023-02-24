@@ -132,6 +132,16 @@ public class Village {
 		
 	}
 	
+	public String rechercherVendeursProduit(String produit) {
+		System.out.println("Les vendeurs qui proposent des " + produit + " sont : ");
+		Etal[] EtalLibre = this.marche.trouverEtals(produit);
+		StringBuilder vendeur = new StringBuilder();
+		for (int i =0;i<EtalLibre.length;i++) {
+			vendeur.append("- " + EtalLibre[i].getVendeur().getNom() + "\n");
+		}
+		return vendeur.toString();
+	}
+	
 	
 	
 	
