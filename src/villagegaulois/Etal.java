@@ -27,12 +27,18 @@ public class Etal {
 
 	public String libererEtal() {
 		etalOccupe = false;
-		StringBuilder chaine = new StringBuilder(
-				"Le vendeur " + vendeur.getNom() + " quitte son étal, ");
+		StringBuilder chaine = new StringBuilder();
+		try {
+			chaine.append("Le vendeur " + vendeur.getNom() + " quitte son étal, ");
+		}
+		catch(NullPointerException e) {
+			return "Auncun vendeur à cette étal.";
+		}
+		
 		int produitVendu = quantiteDebutMarche - quantite;
 		if (produitVendu > 0) {
 			chaine.append(
-					"il a vendu " + produitVendu + " parmi " + produit + ".\n");
+					"il a vendu " + produitVendu + produit + " parmi " + produitVendu + produit + ".\n");
 		} else {
 			chaine.append("il n'a malheureusement rien vendu.\n");
 		}
@@ -47,11 +53,21 @@ public class Etal {
 		return "L'étal est libre";
 	}
 
-	public String acheterProduit(int quantiteAcheter, Gaulois acheteur) {
-		if (etalOccupe) {
+	public String acheterProduit(int quantiteAcheter, Gaulois acheteur) throws IllegalStateException,IllegalArgumentException{
 			StringBuilder chaine = new StringBuilder();
-			chaine.append(acheteur.getNom() + " veut acheter " + quantiteAcheter
-					+ " " + produit + " à " + vendeur.getNom());
+			if (quantiteAcheter < 0) {
+				throw new IllegalArgumentException("La quantite " + quantiteAcheter + " n'est pas positive.");
+			}
+			if (!isEtalOccupe()) {
+				throw new IllegalStateException("L'etal n'est pas occupé ! Il doit l'être.");
+			}
+			try {
+				chaine.append(acheteur.getNom() + " veut acheter " + quantiteAcheter
+						+ " " + produit + " à " + vendeur.getNom());
+			}
+			catch(NullPointerException e){
+				return "L'acheteur n'existe pas.";
+			}
 			if (quantite == 0) {
 				chaine.append(", malheureusement il n'y en a plus !");
 				quantiteAcheter = 0;
@@ -69,13 +85,11 @@ public class Etal {
 						+ ", est ravi de tout trouver sur l'étal de "
 						+ vendeur.getNom() + "\n");
 			}
-			return chaine.toString();
-		}
-		return null;
+		return chaine.toString();
 	}
 
 	public boolean contientProduit(String produit) {
-		return this.produit.equals(produit);
+		return (this.produit == produit);
 	}
 
 }
